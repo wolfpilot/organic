@@ -1,4 +1,4 @@
-import { main } from './js/main';
+import { init } from './js/main';
 
 const isReady = () => {
     return new Promise(resolve => {
@@ -10,4 +10,4 @@ const isReady = () => {
     });
 };
 
-isReady().then(() => main());
+isReady().then(() => init());
