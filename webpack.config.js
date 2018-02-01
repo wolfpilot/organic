@@ -17,14 +17,18 @@ module.exports = {
                 loader: 'babel-loader',
                 include: `${__dirname}/src`,
                 query: {
-                    presets: ['es2015']
+                    presets: ['env', 'stage-2']
                 }
             },
             {
+                enforce: 'pre',
                 test: /\.js$/,
                 loader: 'eslint-loader',
                 include: `${__dirname}/src`,
-                exclude: /node_modules/
+                exclude: /node_modules/,
+                options: {
+                    emitWarning: true
+                }
             }
         ]
     },
