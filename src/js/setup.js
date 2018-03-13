@@ -2,6 +2,10 @@ const x = window.innerWidth / 2;
 const y = window.innerHeight / 2;
 
 const setup = {
+    engine: {
+        fps: 30,
+        sampleFreq: 1000
+    },
     canvas: {
         fill: '#141414'
     },
@@ -17,7 +21,8 @@ const setup = {
                 strokeStyle: {
                     r: 255,
                     g: 255,
-                    b: 255
+                    b: 255,
+                    a: 0
                 }
             }
         ]
