@@ -13,10 +13,12 @@ const setup = {
         size: 50,
         pulses: [
             {
+                prevTick: 0,
                 x: x,
                 y: y,
                 defaultRadius: 50,
                 radius: 50,
+                defaultOpacity: 0,
                 lineWidth: 2,
                 strokeStyle: {
                     r: 255,

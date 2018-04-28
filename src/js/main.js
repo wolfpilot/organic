@@ -41,24 +41,26 @@ const update = (timestamp, state) => {
  * @private
  */
 const _tick = (timestamp, ctx, state) => {
-    // @TODO: Split into a request and a draw function (maybe different names)
-    const elapsed = timestamp - lastDrawTime;
+    // @TODO: Can the logic / render be completely separated in an engine?
+    // Elapsed time between rendered frames
+    const elapsedInterval = timestamp - lastDrawTime;
+
+    // Get the next state
     const nextState = update(timestamp, state);
 
     // Request the next frame
     window.requestAnimationFrame(nextTimestamp => _tick(nextTimestamp, ctx, nextState));
 
     // Check if enough time has passed to render a new frame
-    if (elapsed > fpsInterval) {
-        lastDrawTime = timestamp - (elapsed % fpsInterval);
+    if (elapsedInterval > fpsInterval) {
+        lastDrawTime = timestamp - (elapsedInterval % fpsInterval);
 
         canvas.clear(ctx);
         _draw(ctx, nextState);
     }
 };
 
-// @TODO: Need to re-initialize or recalculate aspect ratio
-// @TODO: Would be too annoying to restart everything
+// @TODO: Need to re-initialize or recalculate aspect ratio, would be too annoying to restart everything
 /**
  * Bind listeners
  * @param {Object} canvasEl - The HTML5 canvas element

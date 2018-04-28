@@ -1,5 +1,49 @@
 // Utils
-import { valBetween } from '../utils/helpers';
+import { easeInOutCubic } from '../utils/easings';
+
+// Constants
+// @TODO: Configurable per pattern (default, heart, etc) later on
+const PULSE_SPEED = 2000; // 1 cycle every 2 seconds
+
+/**
+ * Update pulse opacity
+ * @param {Object} state - Old state
+ * @param {Number} elapsedLifecyclePercentage - The current completion percentage of a start - end cycle
+ * @returns {Number} - The updated opacity value
+ * @private
+ */
+const _updateOpacity = (state, elapsedLifecyclePercentage) => {
+    if (elapsedLifecyclePercentage === 0) {
+        return 0;
+    }
+
+    // The rate of change
+    const dx = 1 - state.strokeStyle.a;
+
+    state.strokeStyle.a += dx * easeInOutCubic(elapsedLifecyclePercentage / 100);
+
+    return state.strokeStyle.a;
+};
+
+/**
+ * Update pulse radius
+ * @param {Object} state - Old state
+ * @param {Number} elapsedLifecyclePercentage - The current completion percentage of a start - end cycle
+ * @returns {Number} - The updated radius value
+ * @private
+ */
+const _updateRadius = (state, elapsedLifecyclePercentage) => {
+    if (elapsedLifecyclePercentage === 0) {
+        return state.defaultRadius;
+    }
+
+    // The rate of change
+    const dx = 0 - state.radius;
+
+    state.radius += dx * easeInOutCubic(elapsedLifecyclePercentage / 100);
+
+    return state.radius;
+};
 
 /**
  * Create a new pulse
@@ -13,9 +57,22 @@ const _makePulse = (timestamp, state) => {
 
     let nextState = { ...state };
 
-    // Need to determine what amount of the lifecycle of a pulse has passed, not based on opacity.
-    nextState.strokeStyle.a = valBetween(state.strokeStyle.a + 0.1, 0, 1);
-    nextState.radius = state.radius > 0 ? state.radius - 1 : state.defaultRadius;
+    /** @NOTE: Can prevTick be initialised to 0 if undefined? Don't update state directly! */
+    if (parseInt((timestamp - state.prevTick) / PULSE_SPEED, 10) >= 1) {
+        nextState.prevTick = timestamp;
+    }
+
+    /**
+     * @NOTE: Can also have a flag for hasLifecycleEnded = true/false
+     * @NOTE: if (!hasLifecycleEnded) { return; } if needed
+     *
+     * @NOTE: Is this state or just a calculation?
+     * @NOTE: func calculateLifecycle()?
+     */
+    const elapsedLifecyclePercentage = parseInt(100 * (timestamp - nextState.prevTick) / PULSE_SPEED, 10);
+
+    nextState.strokeStyle.a = _updateOpacity(state, elapsedLifecyclePercentage);
+    nextState.radius = _updateRadius(state, elapsedLifecyclePercentage);
 
     return nextState;
 };
