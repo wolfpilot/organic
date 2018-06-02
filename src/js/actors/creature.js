@@ -34,11 +34,13 @@ const _updateOpacity = (state, elapsedLifecyclePercentage) => {
  */
 const _updateRadius = (state, elapsedLifecyclePercentage) => {
     if (elapsedLifecyclePercentage === 0) {
-        return state.defaultRadius;
+        return state.startRadius;
     }
 
     // The rate of change
     const dx = 0 - state.radius;
+    // const dx = state.endRadius - state.radius;
+    console.log(state.radius);
 
     state.radius += dx * easeInOutCubic(elapsedLifecyclePercentage / 100);
 
@@ -86,7 +88,7 @@ const _makePulse = (timestamp, state) => {
 const update = (timestamp, state) => {
     if (!state.pulses) { return {}; }
 
-    let nextState = { ...state };
+    const nextState = { ...state };
 
     nextState.pulses = state.pulses.map(pulse => _makePulse(timestamp, pulse));
 

@@ -2,6 +2,10 @@
 import { setup } from './setup';
 
 // Utils
+import * as input from './engine/input';
+import * as engine from './engine/engine';
+import * as GUI from './interface/GUI';
+
 import * as canvas from './interface/canvas';
 import * as creature from './actors/creature';
 
@@ -28,8 +32,11 @@ const _draw = (ctx, state) => {
  */
 const update = (timestamp, state) => {
     return {
+        input: { ...input.update(state.input) },
+        engine: { ...engine.update(timestamp, state.engine) },
         canvas: { ...state.canvas },
-        creature: { ...creature.update(timestamp, state.creature) }
+        creature: { ...creature.update(timestamp, state.creature) },
+        gui: { ...GUI.update(timestamp, state.gui) }
     };
 };
 
@@ -42,6 +49,8 @@ const update = (timestamp, state) => {
  */
 const _tick = (timestamp, ctx, state) => {
     // @TODO: Can the logic / render be completely separated in an engine?
+    if (state.gui.pause) { return; }
+
     // Elapsed time between rendered frames
     const elapsedInterval = timestamp - lastDrawTime;
 
@@ -82,7 +91,12 @@ const init = () => {
     canvas.setup(canvasEl);
 
     _addEventListeners(canvasEl);
-    _tick(0, ctx, initialState);
+    // _tick(0, ctx, initialState);
+
+    // Initialise the controls
+    GUI.init();
+    engine.init();
+    input.init();
 };
 
 export { init };
