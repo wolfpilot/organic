@@ -20,7 +20,7 @@ const _addEventListeners = () => {
     const moveStream$ = Rx.fromEvent(document, 'mousemove');
 
     moveStream$.subscribe(
-        e => console.log(e.clientX)
+        // e => console.log(e.clientX)
     );
 };
 

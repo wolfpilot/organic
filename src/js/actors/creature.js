@@ -40,7 +40,7 @@ const _updateRadius = (state, elapsedLifecyclePercentage) => {
     // The rate of change
     const dx = 0 - state.radius;
     // const dx = state.endRadius - state.radius;
-    console.log(state.radius);
+    // console.log(state.radius);
 
     state.radius += dx * easeInOutCubic(elapsedLifecyclePercentage / 100);
 
